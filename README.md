@@ -1,5 +1,10 @@
 # FastAPI BootStrap (Docker version) 1.0.1
 
-schemas, routes, usecases, dto, service, api, utils
+## .env demo
 
-alembic async support
+```
+DB_USER=fastuser
+DB_PASSWORD=fastpassword!
+DB_HOST=pgdb
+DB_NAME=fastdb
+```
