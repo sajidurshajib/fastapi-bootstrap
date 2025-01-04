@@ -55,5 +55,3 @@ sessionmanager = DatabaseSessionManager()
 async def get_db():
     async with sessionmanager.session() as session:
         yield session
-
-# user=postgres.kpmiqkhmxcklrxdszezp password=[YOUR-PASSWORD] host=aws-0-us-east-1.pooler.supabase.com port=5432 dbname=postgres

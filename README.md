@@ -1,4 +1,4 @@
-# FastAPI BootStrap (Docker version) 1.0.1
+# FastAPI BootStrap 1.0.2
 
 ## .env demo
 
@@ -9,7 +9,16 @@ DB_HOST=pgdb
 DB_NAME=fastdb
 ```
 
-## Commands (Setup and Run)
+```
+DB_USER=myuser
+DB_PASSWORD=mypassword
+DB_HOST=localhost
+DB_NAME=fastdb
+```
+
+
+
+## Setup and Run using Docker 
 
 ### build
 
@@ -55,3 +64,11 @@ DB_NAME=fastdb
 
 -   **Description:** Opens a shell inside the FastAPI container for debugging purposes. The container will be removed after exiting the shell.
 -   **Usage:** Run `make shell` to start a shell session inside the FastAPI container. This is useful for debugging or inspecting the running container.
+
+
+
+## Setup and Run in Local
+
+### build
+
+All commands for local env

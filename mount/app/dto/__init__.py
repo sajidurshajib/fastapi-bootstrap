@@ -8,7 +8,7 @@ class TodoBase(BaseModel):
     completed: bool = False
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class TodoCreate(TodoBase):
     pass

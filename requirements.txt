@@ -5,3 +5,5 @@ asyncpg
 alembic
 psycopg2
 requests
+greenlet
+python-dotenv
