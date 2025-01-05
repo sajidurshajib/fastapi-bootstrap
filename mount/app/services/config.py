@@ -1,18 +1,18 @@
-import os
-from dotenv import load_dotenv
+from pydantic_settings import BaseSettings
 
-load_dotenv()
+class Config(BaseSettings):
+    DB_USER: str
+    DB_PASSWORD: str
+    DB_HOST: str
+    DB_NAME: str
 
-class Config:
-    DB_CONFIG = os.getenv(
-        "DB_CONFIG",
-        "postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}".format(
-            DB_USER=os.getenv("DB_USER"),
-            DB_PASSWORD=os.getenv("DB_PASSWORD"),
-            DB_HOST=os.getenv("DB_HOST"),
-            DB_NAME=os.getenv("DB_NAME"),
-        ),
-    )
+    @property
+    def db_dsn(self) -> str:
+        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}/{self.DB_NAME}"
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
 
 
-config = Config
+config = Config()

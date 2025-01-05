@@ -1,10 +1,10 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.todo import todo
 from app.services.connection import sessionmanager
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.sql import text
 from app.services.lifespan import lifespan
+from app.api.v1 import router as v1_router
 
 # Check lifespan for startup and shutdown DB connection
 app = FastAPI(title="FastAPI Bootstrap", lifespan=lifespan)
@@ -24,16 +24,6 @@ app.add_middleware(
 
 # Root API 
 @app.get("/")
-def read_root():
-    return {"message": "Hello, Admin!"}
-
-
-# All routes 
-app.include_router(todo.router, prefix='/v1')
-
-
-# Check db connection 
-@app.get("/db-health")
 async def health_check():
     async with sessionmanager.session() as session:
         try:
@@ -41,4 +31,8 @@ async def health_check():
             return {"status": "success", "message": "Database connection is healthy"}
         except SQLAlchemyError as e:
             raise HTTPException(status_code=500, detail="Database connection failed")
+
+
+# All routes 
+app.include_router(v1_router, prefix='/v1', tags=["version_1"])
 

@@ -2,6 +2,7 @@
 
 # Check if the correct number of arguments were passed
 if [ "$#" -ne 1 ]; then
+    echo "$#"
     echo "Usage: $0 <migration_name>"
     exit 1
 fi

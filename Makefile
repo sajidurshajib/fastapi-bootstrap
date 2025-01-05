@@ -27,7 +27,7 @@ stop:
 
 # Create migration
 migrate:
-	docker compose run fastapi /scripts/migrate-db.sh $(m)
+	docker compose exec -it fastapi /scripts/migrate-db.sh "$(m)"
 
 # Remove the Docker image
 clean:

@@ -28,7 +28,7 @@ async def lifespan(app: FastAPI):
     retry_delay = 5  # seconds
 
     # Startup logic: Initialize and verify the database connection with retries
-    sessionmanager.init(config.DB_CONFIG)
+    sessionmanager.init(config.db_dsn)
     for attempt in range(max_retries):
         try:
             async with sessionmanager.session() as session:

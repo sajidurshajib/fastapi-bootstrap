@@ -3,7 +3,7 @@ uvicorn
 sqlalchemy>=1.4
 asyncpg
 alembic
-psycopg2
 requests
 greenlet
 python-dotenv
+pydantic-settings
