@@ -1,12 +1,10 @@
 import contextlib
 from typing import AsyncIterator, Union
-
-from fastapi import Depends
-from sqlalchemy.ext.asyncio import (AsyncConnection, AsyncEngine, AsyncSession,
-                                    async_sessionmaker, create_async_engine)
+from sqlalchemy.ext.asyncio import AsyncConnection, AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
+
 class DatabaseSessionManager:
     def __init__(self):
         self._engine: Union[AsyncEngine, None] = None

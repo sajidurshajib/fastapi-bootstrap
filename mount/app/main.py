@@ -1,9 +1,17 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from app.services.connection import sessionmanager
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.sql import text
 from app.services.lifespan import lifespan
+from app.utils.logger import LogAPIMiddleware
+from app.services.exceptions import (
+    http_exception_handler,
+    validation_exception_handler,
+    general_exception_handler,
+    catch_exceptions_middleware,
+)
 from app.api.v1 import router as v1_router
 
 # Check lifespan for startup and shutdown DB connection
@@ -14,6 +22,7 @@ origins = [
     "http://localhost:3000",
 ]
 
+app.add_middleware(LogAPIMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,  
@@ -21,6 +30,14 @@ app.add_middleware(
     allow_methods=["*"],  
     allow_headers=["X-Requested-With", "Content-Type"],  
 )
+
+# Register exception handlers
+app.add_exception_handler(HTTPException, http_exception_handler)
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
+app.add_exception_handler(Exception, general_exception_handler)
+
+# Add middleware
+app.middleware("http")(catch_exceptions_middleware)
 
 # Root API 
 @app.get("/")
@@ -34,5 +51,5 @@ async def health_check():
 
 
 # All routes 
-app.include_router(v1_router, prefix='/v1', tags=["version_1"])
+app.include_router(v1_router, prefix='/v1')
 

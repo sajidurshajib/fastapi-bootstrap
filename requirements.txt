@@ -7,3 +7,4 @@ requests
 greenlet
 python-dotenv
 pydantic-settings
+python-jose

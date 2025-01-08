@@ -5,6 +5,8 @@ class Config(BaseSettings):
     DB_PASSWORD: str
     DB_HOST: str
     DB_NAME: str
+    SECRET_KEY: str
+    ALGORITHM: str
 
     @property
     def db_dsn(self) -> str:
