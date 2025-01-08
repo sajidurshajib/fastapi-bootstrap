@@ -1,4 +1,5 @@
-from sqlalchemy import Column, String, Boolean, Integer
+from sqlalchemy import Column, String, Boolean, Integer, ForeignKey
+from sqlalchemy.orm import relationship
 from .base import BaseModel
 
 
@@ -11,6 +12,10 @@ class User(BaseModel):
     full_name = Column(String(100), nullable=True)
     hashed_password = Column(String(255), nullable=False)
     is_active = Column(Boolean, default=True, nullable=False)
+
+    role_id = Column(Integer, ForeignKey("roles.id"))
+
+    role = relationship("Role", back_populates="users")
 
     def __repr__(self):
         return f"<User(id={self.id}, username='{self.username}', email='{self.email}')>"

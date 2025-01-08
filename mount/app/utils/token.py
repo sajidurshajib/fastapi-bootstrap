@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 from app.services.config import config
 from jose import jwt, JWTError, ExpiredSignatureError
-from schemas.token import TokenData
+from app.schemas.tokens import TokenData
 
 
 class Token:
