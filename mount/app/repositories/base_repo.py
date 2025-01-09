@@ -43,7 +43,8 @@ class BaseRepository(Generic[T]):
 
             query = select(self.model)
             for field, value in kwargs.items():
-                query = query.filter(getattr(self.model, field) == value)
+                if value is not None:
+                    query = query.filter(getattr(self.model, field) == value)
             
             if limit is not None:
                 query = query.limit(limit)
