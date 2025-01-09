@@ -18,7 +18,7 @@ async def all_users(
     offset: Optional[int] = Query(None),
     db: AsyncSession = Depends(get_db)
 ):
-    resp = await users_usecases.user_all(
+    resp = await users_usecases.all(
         db=db, 
         limit=limit, 
         offset=offset, 
@@ -31,6 +31,9 @@ async def all_users(
 
 
 @router.post("/", response_model=UserResponse)
-async def signup(user_in: UserRequest, db: AsyncSession = Depends(get_db)):
+async def signup(
+    user_in: UserRequest, 
+    db: AsyncSession = Depends(get_db)
+    ):
     resp = await users_usecases.user_signup(user_in.model_dump(), db)
     return {"msg": resp}

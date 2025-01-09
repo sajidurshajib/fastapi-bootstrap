@@ -1,18 +1,17 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.services.connection import get_db
-from app.schemas.users import UserRequest, UserResponse
-from app.usecases import users as users_usecases
-from typing import Optional
+from app.schemas import StandardResponse
+from app.usecases import roles as roles_usecases
 
 
 router = APIRouter(prefix="/roles")
 
 
-@router.get("/")
+@router.get("/", response_model=StandardResponse)
 async def all_roles(
     db: AsyncSession = Depends(get_db)
 ):
-    resp = await users_usecases.user_all(db=db)
-    return {"data": resp}
+    resp = await roles_usecases.roles(db)
+    return resp
 

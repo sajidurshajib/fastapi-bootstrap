@@ -1,5 +1,5 @@
 import json
-from fastapi import Response
+from fastapi.responses import JSONResponse
 
 def standard_response(status, success, message, data):
     if isinstance(data, str):
@@ -7,11 +7,11 @@ def standard_response(status, success, message, data):
             data = json.loads(data)
         except json.JSONDecodeError:
             pass
-    return Response(
+    return JSONResponse(
         status_code=status,
         content={
             "success": success,
             "message": message,
-            "data": data if data is not None else {}
+            "data": data
         }
     )
