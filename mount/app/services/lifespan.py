@@ -5,6 +5,7 @@ from app.services.connection import sessionmanager
 from app.services.config import config
 from sqlalchemy.sql import text
 from sqlalchemy.exc import SQLAlchemyError
+from app.seed.run import seeder
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -33,7 +34,8 @@ async def lifespan(app: FastAPI):
         try:
             async with sessionmanager.session() as session:
                 await session.execute(text("SELECT 1"))
-            print("Database connection successfully established during startup.")
+                print("Database connection successfully established during startup.")
+                await seeder(session=session) # Seeder
             break
         except SQLAlchemyError as e:
             if attempt < max_retries - 1:
