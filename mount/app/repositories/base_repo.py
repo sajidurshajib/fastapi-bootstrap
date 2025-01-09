@@ -19,24 +19,40 @@ class BaseRepository(Generic[T]):
         except SQLAlchemyError as e:
             raise e
 
-    # TODO: Need limit and offset 
-    async def get_all_by_field(self, field_name: str, value: any) -> List[T]:
+    async def get_all_by_field(self, field_name: str, value: any, limit: Optional[int] = None, offset: Optional[int] = None) -> List[T]:
         try:
             query = select(self.model).filter(getattr(self.model, field_name) == value)
+
+            if limit is not None:
+                query = query.limit(limit)
+            if offset is not None:
+                query = query.offset(offset)
+
             result = await self.db.execute(query)
             return result.scalars().all()
+            
         except SQLAlchemyError as e:
             raise e
 
-    # TODO: Need limit and offset 
-    async def get_all_by_multi_fields(self, **kwargs) -> List[T]:
+    async def get_all_by_multi_fields(self, limit: Optional[int] = None, offset: Optional[int] = None, **kwargs) -> List[T]:
         try:
+
+            # Pop limit and offset from kwargs if passed as part of **kwargs
+            limit = kwargs.pop('limit', limit)
+            offset = kwargs.pop('offset', offset)
+
             query = select(self.model)
             for field, value in kwargs.items():
                 query = query.filter(getattr(self.model, field) == value)
+            
+            if limit is not None:
+                query = query.limit(limit)
+            if offset is not None:
+                query = query.offset(offset)
 
             result = await self.db.execute(query)
             return result.scalars().all()
+
         except SQLAlchemyError as e:
             raise e
             
