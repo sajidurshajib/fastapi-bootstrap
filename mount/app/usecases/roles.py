@@ -11,7 +11,6 @@ async def roles(db):
     if data is None:
         return standard_response(status.HTTP_404_NOT_FOUND, False, "No data found!", data=[])
         
-
     data = [RoleResponse(role=dt.role, permissions=dt.permissions) for dt in data]
     results = [d.model_dump() for d in data]
 

@@ -36,9 +36,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 
-RUN pip install --upgrade pip psycopg2 pandas requests
-
-
 # Set the working directory
 WORKDIR /src
 

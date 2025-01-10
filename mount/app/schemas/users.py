@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
+from .roles import RoleResponse
+from app.enums.roles import RoleEnum
 
 
 class UserRequest(BaseModel):
@@ -7,8 +9,7 @@ class UserRequest(BaseModel):
     email: str
     full_name: str
     password: str
-    role: str
-
+    role: RoleEnum
 
 
 class UserResponse(BaseModel):
@@ -17,7 +18,7 @@ class UserResponse(BaseModel):
     email: str
     full_name: Optional[str] = None
     is_active: bool
-    role: Optional[str] = None 
+    role: Optional[RoleResponse] = None
 
     class Config:
         form_attribute = True 
@@ -27,7 +28,16 @@ class UserWithRoleId(BaseModel):
     username: str
     email: str
     full_name: str
-    password: str
+    hashed_password: str
     role_id: int
+
+    class Config:
+        form_attribute = True 
+
+
+class LoginRequest(BaseModel):
+    identifier: str 
+    password: str 
+
 
 

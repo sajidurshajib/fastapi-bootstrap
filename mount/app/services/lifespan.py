@@ -34,15 +34,15 @@ async def lifespan(app: FastAPI):
         try:
             async with sessionmanager.session() as session:
                 await session.execute(text("SELECT 1"))
-                print("Database connection successfully established during startup.")
+                print("[+] Database connection successfully established during startup.")
                 await seeder(session=session) # Seeder
             break
         except SQLAlchemyError as e:
             if attempt < max_retries - 1:
-                print(f"Failed to establish database connection (attempt {attempt + 1}/{max_retries}). Retrying in {retry_delay} seconds...")
+                print(f"[-] Failed to establish database connection (attempt {attempt + 1}/{max_retries}). Retrying in {retry_delay} seconds...")
                 await asyncio.sleep(retry_delay)
             else:
-                print("Failed to establish database connection after several attempts.")
+                print("[-] Failed to establish database connection after several attempts.")
                 raise RuntimeError("Database connection failed during startup. Exiting.") from e
 
     # separate startup and shutdown
@@ -51,6 +51,6 @@ async def lifespan(app: FastAPI):
     # Shutdown logic
     try:
         await sessionmanager.close()
-        print("Database connection closed during shutdown.")
+        print("[/] Database connection closed during shutdown.")
     except Exception as e:
-        print(f"Error during shutdown: {e}")
+        print(f"[-] Error during shutdown: {e}")

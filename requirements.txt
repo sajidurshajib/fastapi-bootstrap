@@ -8,3 +8,4 @@ greenlet
 python-dotenv
 pydantic-settings
 python-jose
+bcrypt
