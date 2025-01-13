@@ -21,17 +21,17 @@ class Logger:
 
         # Comment remove if you want to write error logs
         
-        # root_dir = os.path.dirname(os.path.abspath(__file__))  # Current directory
-        # two_layers_up_dir = os.path.abspath(os.path.join(root_dir, "../../logs"))  # Two layers up
-        # os.makedirs(two_layers_up_dir, exist_ok=True)
-        # log_file_path = os.path.join(two_layers_up_dir, log_file) 
+        root_dir = os.path.dirname(os.path.abspath(__file__))  # Current directory
+        two_layers_up_dir = os.path.abspath(os.path.join(root_dir, "../../logs"))  # Two layers up
+        os.makedirs(two_layers_up_dir, exist_ok=True)
+        log_file_path = os.path.join(two_layers_up_dir, log_file) 
 
-        # # File handler only for ERROR level logs
-        # file_handler = RotatingFileHandler(log_file_path, maxBytes=max_bytes, backupCount=backup_count)
-        # file_handler.setLevel(LogLevel.ERROR.value)
-        # file_formatter = logging.Formatter('%(levelname)s - %(asctime)s - %(name)s - %(message)s')
-        # file_handler.setFormatter(file_formatter)
-        # self.logger.addHandler(file_handler)
+        # File handler only for ERROR level logs
+        file_handler = RotatingFileHandler(log_file_path, maxBytes=max_bytes, backupCount=backup_count)
+        file_handler.setLevel(LogLevel.ERROR.value)
+        file_formatter = logging.Formatter('%(levelname)s - %(asctime)s - %(name)s - %(message)s')
+        file_handler.setFormatter(file_formatter)
+        self.logger.addHandler(file_handler)
 
         # Console handler for all levels
         console_handler = logging.StreamHandler()

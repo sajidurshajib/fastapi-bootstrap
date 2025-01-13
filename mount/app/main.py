@@ -13,9 +13,17 @@ from app.services.exceptions import (
     catch_exceptions_middleware,
 )
 from app.api.v1 import router as v1_router
+from app.api.dashboard import router as dashboard_router
+from app.utils.logger import Logger
+
 
 # Check lifespan for startup and shutdown DB connection
 app = FastAPI(title="FastAPI Bootstrap", lifespan=lifespan)
+
+
+# init logger
+logger = Logger(__name__)
+
 
 # For cors origin
 origins = [
@@ -45,11 +53,14 @@ async def health_check():
     async with sessionmanager.session() as session:
         try:
             await session.execute(text("SELECT 1"))
+            logger.info(f"Database connection is healthy")
             return {"status": "success", "message": "Database connection is healthy"}
         except SQLAlchemyError as e:
+            logger.error(e)
             raise HTTPException(status_code=500, detail="Database connection failed")
 
 
 # All routes 
-app.include_router(v1_router, prefix='/v1')
+app.include_router(v1_router, prefix='/api/v1')
+app.include_router(dashboard_router, prefix='/api/dashboard')
 

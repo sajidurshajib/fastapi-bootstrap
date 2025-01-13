@@ -1,14 +1,14 @@
 [
     {
         "role": "admin",
-        "permissions": ["user:create", "user:delete", "report:view", "settings:manage"]
+        "permissions": ["dashboard:users:search"]
     },
     {
         "role": "manager",
-        "permissions": ["report:view", "settings:manage"]
+        "permissions": ["dashboard:users:search"]
     },
     {
         "role": "user",
-        "permissions": ["profile:view"]
+        "permissions": []
     }
 ]

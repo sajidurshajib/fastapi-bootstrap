@@ -4,6 +4,7 @@ redis_data
 .env
 env
 venv
+/mount/logs
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

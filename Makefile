@@ -1,4 +1,5 @@
 # Define variables for Docker-related tasks
+SERVICE_NAME = fastapi
 IMAGE_NAME = fastapi_bootstrap
 DOCKER_COMPOSE_FILE = docker-compose.yml
 
@@ -27,7 +28,7 @@ stop:
 
 # Create migration
 migrate:
-	docker compose exec -it fastapi /scripts/migrate-db.sh "$(m)"
+	docker compose exec -it $(SERVICE_NAME) /scripts/migrate-db.sh "$(m)"
 
 # Remove the Docker image
 clean:
@@ -35,8 +36,8 @@ clean:
 
 # Display logs of the FastAPI service
 logs:
-	docker compose -f $(DOCKER_COMPOSE_FILE) logs --since=1h fastapi
+	docker compose -f $(DOCKER_COMPOSE_FILE) logs --since=1h $(SERVICE_NAME)
 
 # Run a shell inside the FastAPI container for debugging
 shell:
-	docker compose -f $(DOCKER_COMPOSE_FILE) run --rm fastapi sh
+	docker compose -f $(DOCKER_COMPOSE_FILE) run --rm $(SERVICE_NAME) sh

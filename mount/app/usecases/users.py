@@ -8,16 +8,20 @@ from app.schemas.roles import RoleResponse
 from app.utils.password_utils import PasswordHasher
 from app.utils.token import Token
 from app.enums.roles import RoleEnum
-import pprint
+from app.utils.logger import Logger
 
+
+logger = Logger(__name__)
 
 async def auth(user_id:int, db:AsyncSession):
+
     user_repo = UserRepository(db)
 
     try:
         user_data: User = await user_repo.get_with_role(user_id)
 
         if not user_data:
+            logger.info("User not found!")
             return status.HTTP_404_NOT_FOUND, False, "User not found!", None
 
         new_data_resp = UserResponse(
@@ -34,33 +38,40 @@ async def auth(user_id:int, db:AsyncSession):
         return status.HTTP_200_OK, True, "Authenticated!", new_data_json
 
     except Exception as e:
+        logger.error(f"Something went wrong with user data: {e}")
         return status.HTTP_500_INTERNAL_SERVER_ERROR, False, f"Something went wrong with user data: {e}", None
         
 
 
 async def login(user_credentials:LoginRequest, db: AsyncSession):
+
     user_repo = UserRepository(db)
 
     try:
         user_exists = await user_repo.get_by_userneme_or_email(user_credentials.identifier)
         if not user_exists:
+            logger.info(f"User not found!")
             return status.HTTP_404_NOT_FOUND, False, f"User not found!", None
 
         if not user_exists.is_active:
+            logger.info(f"You are not a active user!")
             return status.HTTP_401_UNAUTHORIZED, False, f"You are not a active user!", None
 
         verify_password = PasswordHasher.verify_password(user_credentials.password, user_exists.hashed_password)
         if not verify_password:
+            logger.info(f"Wrong password!")
             return status.HTTP_401_UNAUTHORIZED, False, f"Wrong password!", None
         
         access_token = Token.create_access_token({"sub": user_exists.id})        
         return status.HTTP_200_OK, False, f"Access granted!", {"access_token": access_token, "token_type": "bearer"}
     
     except Exception as e:
+        logger.error(f"Something went wrong with user data: {e}")
         return status.HTTP_500_INTERNAL_SERVER_ERROR, False, f"Something went wrong with user data: {e}", None
     
 
 async def signup(user_data: UserRequest, db: AsyncSession):
+
     user_repo = UserRepository(db)
     role_repo = RoleRepository(db)
 
@@ -68,16 +79,19 @@ async def signup(user_data: UserRequest, db: AsyncSession):
         # if email exist
         user_exists = await user_repo.get_by_field("email", user_data.email)
         if user_exists:
+            logger.info("Email is already registered!")
             return status.HTTP_409_CONFLICT, False, "Email is already registered!", None
 
         # if username exist
         user_exists = await user_repo.get_by_field("username", user_data.username)
         if user_exists:
+            logger.info("Username already exists!")
             return status.HTTP_409_CONFLICT, False, "Username already exists!", None
 
 
         role = await role_repo.get_by_field("role", user_data.role.value)
         if not role:
+            logger.info("Role not found!")
             return status.HTTP_404_NOT_FOUND, False, "Role not found!", None
 
         admin_role = await role_repo.get_by_field("role", RoleEnum.ADMIN.value)
@@ -85,6 +99,7 @@ async def signup(user_data: UserRequest, db: AsyncSession):
         # if admin exist
         admin_exist = await user_repo.get_by_field("role_id", admin_role.id)
         if admin_exist and role.id == admin_role.id:
+            logger.info("Admin already exists!")
             return status.HTTP_409_CONFLICT, False, "Admin already exists!", None
 
 
@@ -108,5 +123,6 @@ async def signup(user_data: UserRequest, db: AsyncSession):
 
         return status.HTTP_201_CREATED, True, "Signup successfull!", new_data_json
     except Exception as e:
+        logger.error(f"Something went wrong with user data: {e}")
         return status.HTTP_500_INTERNAL_SERVER_ERROR, False, f"Something went wrong with user data: {e}", None
     

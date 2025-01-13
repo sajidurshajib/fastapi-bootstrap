@@ -77,4 +77,5 @@ All commands for local env
 
 =========================
 
+Add logger
 Need to check docker and local both
