@@ -28,7 +28,29 @@ class UserRepository(BaseRepository[User]):
             return result.scalars().first()
         except SQLAlchemyError as e:
             raise e
+    
 
+    async def search(self, key:str, role:str, is_active:bool, limit: int = None, offset: int = None):
+        try:
+            query = select(User).options(joinedload(User.role))
+            query = query.filter(User.is_active == is_active)
+            if role:
+                query = query.filter(User.role.has(Role.role == role))
+            if key:
+                query = query.filter(
+                                    or_(
+                                        User.full_name.ilike(f"%{key}%"),
+                                        User.username.ilike(f"%{key}%"),
+                                        User.email.ilike(f"%{key}%")
+                                    )
+                                )
+            query = query.limit(limit).offset(offset)
+
+            result = await self.db.execute(query)
+            
+            return result.scalars().all()
+        except SQLAlchemyError as e:
+            raise e
 
     async def create(self, data: dict, commit: bool = True):
         try:
