@@ -51,10 +51,6 @@ def has_permission(required_permission):
             data_json = json.loads(data)
             user_permissions = data_json["role"]["permissions"]
 
-            print("-"*10)
-            pprint.pprint(user_permissions)
-            print("-"*10)
-
             if required_permission not in user_permissions:
                 logger.info(f"You don't have permission to access this resource!")
                 return status.HTTP_403_FORBIDDEN , False, f"You don't have permission to access this resource!", None

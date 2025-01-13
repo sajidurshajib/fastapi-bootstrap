@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.services.connection import get_db
 from app.schemas import StandardResponse
@@ -15,7 +15,7 @@ router = APIRouter(prefix="/users")
 @router.get("/search")
 async def search_users(
     key: str = "",
-    role: RoleEnum = RoleEnum.USER,
+    role: RoleEnum = Query(),
     is_active: bool = True,
     offset: int = 0,
     limit: int = 10,

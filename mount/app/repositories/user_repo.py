@@ -30,7 +30,7 @@ class UserRepository(BaseRepository[User]):
             raise e
     
 
-    async def search(self, key:str, role:str, is_active:bool, limit: int = None, offset: int = None):
+    async def search(self, key:str, role:str, is_active:bool, offset: int = None, limit: int = None):
         try:
             query = select(User).options(joinedload(User.role))
             query = query.filter(User.is_active == is_active)

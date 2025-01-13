@@ -18,7 +18,7 @@ async def search(key:str, role: str, is_active:bool, offset:int, limit:int, db:A
     user_repo = UserRepository(db)
 
     try:
-        users = await user_repo.search(key, role, is_active)
+        users = await user_repo.search(key, role, is_active, offset, limit)
         if users:
             all_users = []
             for user in users:

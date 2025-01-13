@@ -1,81 +1,50 @@
-# FastAPI BootStrap 1.0.2
+# FastAPI Bootstrap v1.0.1
 
-## .env demo
+Welcome to FastAPI Bootstrap! This repository is designed to give you a head start in building your next FastAPI project. With its well-organized structure and pre-configured settings, you can dive straight into development without wasting time setting up the basics.
+
+## Why Use This Repository?
+
+**Quick Start:** Save time by using this as a foundation for your FastAPI projects.
+
+**Best Practices:** The repository follows standard coding conventions and scalable architecture.
+
+**Customizable:** Easily tailor the structure to suit your project needs.
+
+## Contributions Welcome!
+
+If you have any suggestions to improve the structure or ideas for enhancing the codebase, feel free to open an issue or submit a pull request. Your feedback is invaluable in making this repository better for everyone!
+
+
+
+## .env file
 
 ```
 DB_USER=fastuser
 DB_PASSWORD=fastpassword!
 DB_HOST=pgdb
 DB_NAME=fastdb
-```
-
-```
-DB_USER=myuser
-DB_PASSWORD=mypassword
-DB_HOST=localhost
-DB_NAME=fastdb
+SECRET_KEY=p7dy3qua3jxkspo&=#0xd56t-3a7g0mnj_s5(2g=eh#)jd^!6y
+ALGORITHM=HS256
 ```
 
 
 
-## Setup and Run using Docker 
 
-### build
+## Build and Run (Docker)
 
--   **Description:** Builds the Docker image using the specified Docker Compose file.
--   **Usage:** Run `make build` to build the Docker image. This command only builds the image and doesn't start any containers.
+I have written a Makefile to simplify the process. You can use the commands in the Makefile to save time, or you can skip those and manually run the commands.
 
-### rebuild
+**Makefile commands:**
 
--   **Description:** Removes all containers, networks, volumes, and images, then rebuilds the Docker image and starts the containers in detached mode.
--   **Usage:** Run `make rebuild` to rebuild the image and restart the containers. This is useful when you want to start fresh with new changes.
+1. **build**: `make build `
+2. **run**: `make start`
+3. **rebuild**: `make rebuild`
+4. **restart**: `make restart`
+5. **stop**: `make stop`
+6. **remove docker image**: `make clean`
+   
+**For development**
 
-### start
-
--   **Description:** Starts the Docker containers in detached mode using the specified Docker Compose file.
--   **Usage:** Run `make start` to start the containers. If the containers are already running, they will continue to run without any changes.
-
-### restart
-
--   **Description:** Stops and removes the running containers, then starts them again in detached mode.
--   **Usage:** Run `make restart` to restart the containers. This is useful if you need to refresh the state of the running containers.
-
-### stop
-
--   **Description:** Stops and removes the containers, networks, images, and volumes created by Docker Compose.
--   **Usage:** Run `make stop` to stop and remove all containers, networks, images, and volumes. This command is useful for cleaning up your environment.
-
-### migrate
-
--   **Description:** Runs a migration script inside the FastAPI container to apply database migrations. The $(m) argument allows you to pass additional arguments to the migration script.
--   **Usage:** Run `make migrate m="additional_arguments"` to apply database migrations. Replace "additional_arguments" with any specific arguments you need for the migration script.
-
-### clean
-
--   **Description:** Removes the Docker image defined by IMAGE_NAME.
--   **Usage:** Run `make clean` to remove the Docker image. This is useful if you want to delete the image from your system.
-
-### logs
-
--   **Description:** Displays the logs of the FastAPI service from the last hour.
--   **Usage:** Run `make logs` to view the logs of the FastAPI service. This is helpful for debugging issues or monitoring the service.
-
-### shell
-
--   **Description:** Opens a shell inside the FastAPI container for debugging purposes. The container will be removed after exiting the shell.
--   **Usage:** Run `make shell` to start a shell session inside the FastAPI container. This is useful for debugging or inspecting the running container.
-
-
-
-## Setup and Run in Local
-
-### build
-
-All commands for local env
-
-
-
-=========================
-
-Add logger
-Need to check docker and local both
+1. **migration**: `make migrate m="your_comment_or_msg"`
+2. **logs**: `make logs`
+3. **shell**: `make shell`
