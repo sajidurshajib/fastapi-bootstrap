@@ -25,3 +25,12 @@ async def search_users(
     status_code, success, message,  user_data = await users_dashboard_usecases.search(key, role.value, is_active, offset, limit, db)
     return standard_response(status_code, success, message, user_data)
 
+
+@router.patch("/status/{user_id}")
+async def user_status_change(
+    user_id: int,
+    user: StandardResponse = Depends(has_permission("dashboard:users-status:update")),
+    db: AsyncSession = Depends(get_db)
+    ):
+    status_code, success, message, data = await users_dashboard_usecases.user_status_change(user_id, db)
+    return standard_response(status_code, success, message, data)

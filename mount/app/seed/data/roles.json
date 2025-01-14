@@ -1,11 +1,16 @@
 [
     {
         "role": "admin",
-        "permissions": ["dashboard:users:search"]
+        "permissions": [
+            "dashboard:users:search",
+            "dashboard:users-status:update"
+        ]
     },
     {
         "role": "manager",
-        "permissions": ["dashboard:users:search"]
+        "permissions": [
+            "dashboard:users:search"
+        ]
     },
     {
         "role": "user",

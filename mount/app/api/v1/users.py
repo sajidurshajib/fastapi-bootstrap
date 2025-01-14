@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.services.connection import get_db
 from app.schemas import StandardResponse
-from app.schemas.users import UserRequest, LoginRequest
+from app.schemas.users import UserRequest, UserUpdate, LoginRequest
 from app.utils.responses import standard_response
 from app.usecases import users as users_usecases
 from app.services.auth_dependency import logged_in
-
+import json
 
 router = APIRouter(prefix="/users")
 
@@ -35,3 +35,17 @@ async def login(
     ):
     status, success, message, data = await users_usecases.login(user_credentials, db)
     return standard_response(status, success, message, data)
+
+
+@router.patch("/update", response_model=StandardResponse)
+async def update(
+    user_in: UserUpdate, 
+    user: StandardResponse = Depends(logged_in),
+    db: AsyncSession = Depends(get_db)
+    ):
+    user_status_code, user_success, user_message, user_data = user
+    if not user_success:
+        return standard_response(user_status_code, user_success, user_message, user_data)
+    user_id = json.loads(user_data)["id"]
+    status_code, success, message, data = await users_usecases.update(user_id, user_in, db)
+    return standard_response(status_code, success, message, data)

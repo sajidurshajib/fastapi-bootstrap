@@ -126,3 +126,37 @@ async def signup(user_data: UserRequest, db: AsyncSession):
         logger.error(f"Something went wrong with user data: {e}")
         return status.HTTP_500_INTERNAL_SERVER_ERROR, False, f"Something went wrong with user data: {e}", None
     
+    
+async def update(user_id:int, user_data: UserRequest, db: AsyncSession):
+
+    user_repo = UserRepository(db)
+
+    try:
+        user_exists: User = await user_repo.get_with_role(user_id)
+        if not user_exists:
+            logger.info("User not found!")
+            return status.HTTP_404_NOT_FOUND, False, "User not found!", None
+
+        if user_data.email:
+            user_exists.email = user_data.email
+        if user_data.full_name:
+            user_exists.full_name = user_data.full_name
+
+
+        new_user:User = await user_repo.update(user_id, user_exists.__dict__.copy())
+
+        new_data_resp = UserResponse(
+                id=new_user.id,
+                username=new_user.username,
+                email=new_user.email,
+                full_name=new_user.full_name,
+                is_active=new_user.is_active,
+                role=RoleResponse.model_validate(new_user.role.__dict__.copy()) if new_user.role else None
+            )
+
+        new_data_json = new_data_resp.model_dump_json()
+
+        return status.HTTP_202_ACCEPTED, True, "User updated!", new_data_json
+    except Exception as e:
+        logger.error(f"Something went wrong with user data: {e}")
+        return status.HTTP_500_INTERNAL_SERVER_ERROR, False, f"Something went wrong with user data: {e}", None

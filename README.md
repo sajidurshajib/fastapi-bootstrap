@@ -23,10 +23,11 @@ DB_USER=fastuser
 DB_PASSWORD=fastpassword!
 DB_HOST=pgdb
 DB_NAME=fastdb
-SECRET_KEY=p7dy3qua3jxkspo&=#0xd56t-3a7g0mnj_s5(2g=eh#)jd^!6y
+SECRET_KEY=s7dy3qua3jxkspo&=#0xd53t-3a7g0mnj_s5(2g=eh#)jd^!3y
 ALGORITHM=HS256
 ```
 
+Place the following environment variables in your `.env` file before building and running the project. Adjust the values according to your needs. The `DB_HOST` value should match the `pgdb` service name specified in the `docker-compose.yml` file if you are running the project using **Docker**.
 
 
 
@@ -48,3 +49,9 @@ I have written a Makefile to simplify the process. You can use the commands in t
 1. **migration**: `make migrate m="your_comment_or_msg"`
 2. **logs**: `make logs`
 3. **shell**: `make shell`
+
+
+## Todo
+1. User update and Delete
+2. Write Migration steps in README.md
+3. 

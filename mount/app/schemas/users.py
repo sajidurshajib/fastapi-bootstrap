@@ -12,6 +12,15 @@ class UserRequest(BaseModel):
     role: RoleEnum
 
 
+class UserUpdate(BaseModel):
+    username: Optional[str] = None
+    email: Optional[str] = None
+    full_name: Optional[str] = None
+
+    class Config:
+        form_attribute = True
+
+
 class UserResponse(BaseModel):
     id: int
     username: str

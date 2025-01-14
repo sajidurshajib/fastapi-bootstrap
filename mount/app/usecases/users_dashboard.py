@@ -46,3 +46,22 @@ async def search(key:str, role: str, is_active:bool, offset:int, limit:int, db:A
         logger.error(f"Something went wrong with user data: {e}")
         return status.HTTP_500_INTERNAL_SERVER_ERROR, False, f"Something went wrong with user data: {e}", None
     
+async def user_status_change(user_id : int, db:AsyncSession):
+    user_repo = UserRepository(db)
+
+    try:
+        user:User = await user_repo.get_by_field("id",user_id)
+        if user:
+            if user.is_active:
+                user.is_active = False
+            else:
+                user.is_active = True
+            await user_repo.update(user_id, user.__dict__.copy())
+            await db.commit()
+            return status.HTTP_200_OK, True, "User status changed!", {"is_active":user.is_active}
+        else:
+            return status.HTTP_404_NOT_FOUND, False, "User not found!", None
+
+    except Exception as e:
+        logger.error(f"Something went wrong with user data: {e}")
+        return status.HTTP_500_INTERNAL_SERVER_ERROR, False, f"Something went wrong with user data: {e}", None
