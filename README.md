@@ -51,7 +51,20 @@ I have written a Makefile to simplify the process. You can use the commands in t
 3. **shell**: `make shell`
 
 
-## Todo
-1. User update and Delete
-2. Write Migration steps in README.md
-3. 
+## Migration
+
+When you create a new model, you should import it in `models/__init__.py`. After that, you can run the `make migrate` command. If you make any changes to a model or create a new one, those changes will be reflected in the database after restarting the application. This is because `script/start.sh` runs `alembic upgrade head` before starting the application.
+
+
+## Seeds
+
+We seed roles when the application starts. The `roles_seeder.py` script in the seed directory handles this, fetching the data from `data/roles.json`. If you create any seeder script, remember to import it in `run.py`.
+
+
+## Logs
+You will find error logs only in `logs` directory.
+
+
+## Conclusion
+
+FastAPI Bootstrap provides a solid foundation for quickly starting your FastAPI projects. With pre-configured settings, organized structure, and tools for migrations, seeding, and Docker integration, you can focus on building features instead of setting up the basics. Whether you’re a beginner or an experienced developer, this repository aims to streamline your development workflow.
