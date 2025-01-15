@@ -51,4 +51,9 @@ class LoginRequest(BaseModel):
     password: str 
 
 
+class UpdatePassword(BaseModel):
+    old_password: Optional[str] = None
+    new_password: str
 
+class NewPasswordRequest(BaseModel):
+    new_password: str

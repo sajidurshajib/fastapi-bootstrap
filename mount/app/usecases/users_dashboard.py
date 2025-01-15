@@ -48,6 +48,7 @@ async def search(key:str, role: str, is_active:bool, offset:int, limit:int, db:A
         logger.error(f"Something went wrong with user data: {e}")
         return status.HTTP_500_INTERNAL_SERVER_ERROR, False, f"Something went wrong with user data: {e}", None
     
+    
 async def user_status_change(user_id : int, db:AsyncSession):
     user_repo = UserRepository(db)
 

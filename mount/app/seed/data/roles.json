@@ -3,7 +3,8 @@
         "role": "admin",
         "permissions": [
             "dashboard:users:search",
-            "dashboard:users-status:update"
+            "dashboard:users-status:update",
+            "dashboard:users-password:update"
         ]
     },
     {
