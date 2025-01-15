@@ -22,6 +22,10 @@ async def search_users(
     user: StandardResponse = Depends(has_permission("dashboard:users:search")),
     db: AsyncSession = Depends(get_db)
     ):
+    user_status_code, user_success, user_message, user_data = user
+    if not user_success:
+        return standard_response(user_status_code, user_success, user_message, user_data)
+
     status_code, success, message,  user_data = await users_dashboard_usecases.search(key, role.value, is_active, offset, limit, db)
     return standard_response(status_code, success, message, user_data)
 
@@ -32,5 +36,9 @@ async def user_status_change(
     user: StandardResponse = Depends(has_permission("dashboard:users-status:update")),
     db: AsyncSession = Depends(get_db)
     ):
+    user_status_code, user_success, user_message, user_data = user
+    if not user_success:
+        return standard_response(user_status_code, user_success, user_message, user_data)
+        
     status_code, success, message, data = await users_dashboard_usecases.user_status_change(user_id, db)
     return standard_response(status_code, success, message, data)

@@ -1,7 +1,7 @@
 from sqlalchemy import or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
-from app.models import User, Role
+from app.models import User, Role, Profile
 from .base_repo import BaseRepository
 from sqlalchemy.orm import joinedload
 from sqlalchemy.future import select
@@ -21,9 +21,10 @@ class UserRepository(BaseRepository[User]):
             raise e
 
 
-    async def get_with_role(self, user_id: int):
+    async def get_full_user(self, user_id: int):
         try:
-            query = select(User).options(joinedload(User.role)).filter(User.id == user_id)
+            
+            query = select(User).options(joinedload(User.role), joinedload(User.profile)).filter(User.id == user_id) 
             result = await self.db.execute(query)
             return result.scalars().first()
         except SQLAlchemyError as e:
@@ -32,7 +33,7 @@ class UserRepository(BaseRepository[User]):
 
     async def search(self, key:str, role:str, is_active:bool, offset: int = None, limit: int = None):
         try:
-            query = select(User).options(joinedload(User.role))
+            query = select(User).options(joinedload(User.role), joinedload(User.profile)) 
             query = query.filter(User.is_active == is_active)
             if role:
                 query = query.filter(User.role.has(Role.role == role))
@@ -48,7 +49,7 @@ class UserRepository(BaseRepository[User]):
 
             result = await self.db.execute(query)
             
-            return result.scalars().all()
+            return result.unique().scalars().all()
         except SQLAlchemyError as e:
             raise e
 
@@ -59,7 +60,7 @@ class UserRepository(BaseRepository[User]):
             if commit:
                 await self.db.commit()
                 await self.db.refresh(item)
-            res = await self.get_with_role(user_id=item.id)
+            res = await self.get_full_user(user_id=item.id)
             return res
         except SQLAlchemyError as e:
             await self.db.rollback()

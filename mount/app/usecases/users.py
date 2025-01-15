@@ -2,13 +2,16 @@ from fastapi import status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.user_repo import UserRepository
 from app.repositories.role_repo import RoleRepository
+from app.repositories.profile_repo import ProfileRepository
 from app.models import User
 from app.schemas.users import UserWithRoleId, UserResponse, UserRequest, LoginRequest
 from app.schemas.roles import RoleResponse
+from app.schemas.profiles import ProfileResponse
 from app.utils.password_utils import PasswordHasher
 from app.utils.token import Token
 from app.enums.roles import RoleEnum
 from app.utils.logger import Logger
+import pprint
 
 
 logger = Logger(__name__)
@@ -18,22 +21,26 @@ async def auth(user_id:int, db:AsyncSession):
     user_repo = UserRepository(db)
 
     try:
-        user_data: User = await user_repo.get_with_role(user_id)
+        user_data: User = await user_repo.get_full_user(user_id)
 
         if not user_data:
             logger.info("User not found!")
             return status.HTTP_404_NOT_FOUND, False, "User not found!", None
-
+        
+        pprint.pprint(ProfileResponse.model_validate(user_data.profile.__dict__.copy()))
+        
         new_data_resp = UserResponse(
             id=user_data.id,
             username=user_data.username,
             email=user_data.email,
             full_name=user_data.full_name,
             is_active=user_data.is_active,
-            role=RoleResponse.model_validate(user_data.role.__dict__.copy()) if user_data.role else None
+            role=RoleResponse.model_validate(user_data.role.__dict__.copy()) if user_data.role else None,
+            profile=ProfileResponse.model_validate(user_data.profile.__dict__.copy()) if user_data.profile else None
         )
 
         new_data_json = new_data_resp.model_dump_json()
+
 
         return status.HTTP_200_OK, True, "Authenticated!", new_data_json
 
@@ -74,6 +81,7 @@ async def signup(user_data: UserRequest, db: AsyncSession):
 
     user_repo = UserRepository(db)
     role_repo = RoleRepository(db)
+    profile_repo = ProfileRepository(db)
 
     try:
         # if email exist
@@ -116,10 +124,13 @@ async def signup(user_data: UserRequest, db: AsyncSession):
                 email=new_user.email,
                 full_name=new_user.full_name,
                 is_active=new_user.is_active,
-                role=RoleResponse.model_validate(new_user.role.__dict__.copy()) if new_user.role else None
+                role=RoleResponse.model_validate(new_user.role.__dict__.copy()) if new_user.role else None,
+                profile=ProfileResponse.model_validate(new_user.profile.__dict__.copy()) if new_user.profile else None
             )
 
         new_data_json = new_data_resp.model_dump_json()
+
+        new_profile = await profile_repo.create({"user_id": new_user.id})
 
         return status.HTTP_201_CREATED, True, "Signup successfull!", new_data_json
     except Exception as e:
@@ -132,7 +143,7 @@ async def update(user_id:int, user_data: UserRequest, db: AsyncSession):
     user_repo = UserRepository(db)
 
     try:
-        user_exists: User = await user_repo.get_with_role(user_id)
+        user_exists: User = await user_repo.get_full_user(user_id)
         if not user_exists:
             logger.info("User not found!")
             return status.HTTP_404_NOT_FOUND, False, "User not found!", None
@@ -151,7 +162,8 @@ async def update(user_id:int, user_data: UserRequest, db: AsyncSession):
                 email=new_user.email,
                 full_name=new_user.full_name,
                 is_active=new_user.is_active,
-                role=RoleResponse.model_validate(new_user.role.__dict__.copy()) if new_user.role else None
+                role=RoleResponse.model_validate(new_user.role.__dict__.copy()) if new_user.role else None,
+                profile=ProfileResponse.model_validate(new_user.profile.__dict__.copy()) if new_user.profile else None
             )
 
         new_data_json = new_data_resp.model_dump_json()

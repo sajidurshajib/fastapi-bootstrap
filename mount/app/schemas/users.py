@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from .roles import RoleResponse
+from .profiles import ProfileResponse
 from app.enums.roles import RoleEnum
 
 
@@ -28,6 +29,7 @@ class UserResponse(BaseModel):
     full_name: Optional[str] = None
     is_active: bool
     role: Optional[RoleResponse] = None
+    profile: Optional[ProfileResponse] = None
 
     class Config:
         form_attribute = True 

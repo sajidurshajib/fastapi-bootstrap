@@ -16,6 +16,7 @@ class User(BaseModel):
     role_id = Column(Integer, ForeignKey("roles.id"))
 
     role = relationship("Role", back_populates="users")
+    profile = relationship("Profile", back_populates="user", uselist=False)
 
     def __repr__(self):
         return f"<User(id={self.id}, username='{self.username}', email='{self.email}')>"

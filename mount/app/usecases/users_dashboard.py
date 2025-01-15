@@ -5,6 +5,7 @@ from app.repositories.role_repo import RoleRepository
 from app.models import User
 from app.schemas.users import UserWithRoleId, UserResponse, UserRequest, LoginRequest
 from app.schemas.roles import RoleResponse
+from app.schemas.profiles import ProfileResponse
 from app.utils.password_utils import PasswordHasher
 from app.utils.token import Token
 from app.enums.roles import RoleEnum
@@ -28,7 +29,8 @@ async def search(key:str, role: str, is_active:bool, offset:int, limit:int, db:A
                     email=user.email,
                     full_name=user.full_name,
                     is_active=user.is_active,
-                    role=RoleResponse.model_validate(user.role.__dict__.copy()) if user.role else None
+                    role=RoleResponse.model_validate(user.role.__dict__.copy()) if user.role else None,
+                    profile=ProfileResponse.model_validate(user.profile.__dict__.copy()) if user.profile else None 
                 )
                 all_users.append(json.loads(user_resp.model_dump_json()))
 
