@@ -1,6 +1,6 @@
 # Define variables for Docker-related tasks
 SERVICE_NAME = fastapi
-IMAGE_NAME = fastapi_bootstrap
+IMAGE_NAME = fastapi
 DOCKER_COMPOSE_FILE = docker-compose.yml
 
 # Build the Docker image
@@ -41,3 +41,25 @@ logs:
 # Run a shell inside the FastAPI container for debugging
 shell:
 	docker compose -f $(DOCKER_COMPOSE_FILE) run --rm $(SERVICE_NAME) sh
+
+# Seed command: make cli seed=roles
+cli:
+	docker compose exec -it $(SERVICE_NAME) python app/cli.py $(seed)
+
+# For Formatting and linting tasks
+ruff-check:
+	ruff check .
+
+ruff-check-fix:
+	ruff check . --fix
+
+ruff-check-import-fix:
+	ruff check . --select I --fix
+
+ruff-format:
+	ruff format .
+
+ruff-all:
+	ruff check . --fix
+	ruff check . --select I --fix
+	ruff format .

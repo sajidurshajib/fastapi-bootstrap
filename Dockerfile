@@ -11,29 +11,13 @@ ENV PYTHONFAULTHANDLER=1 \
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    libc6-dev \
-    make \
-    libffi-dev \
-    g++ \
-    git \
-    bash \
-    zip \
-    openssl \
-    openssh-client \
     curl \
-    libcurl4-openssl-dev \
-    libpcre3-dev \
-    libpq5 \
+    git \
+    gcc \
     libpq-dev \
     python3-dev \
-    postgresql-client \
-    libjpeg-dev \
-    zlib1g-dev \
-    wget \
-    default-libmysqlclient-dev \
-    mariadb-client && \
-    rm -rf /var/lib/apt/lists/*
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
 
 # Set the working directory
