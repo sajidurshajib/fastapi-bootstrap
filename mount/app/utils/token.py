@@ -1,39 +1,70 @@
-from fastapi import status
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
-from app.services.config import config
-from jose import jwt, JWTError, ExpiredSignatureError
+
+from fastapi import status
+from jose import ExpiredSignatureError, JWTError, jwt
+
+from app.enums.tokens import TokenType
 from app.schemas.tokens import TokenData
+from app.services.config import config
 
 
 class Token:
-    @staticmethod
-    def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
-        to_encode = data.copy()
-        if expires_delta:
-            expire = datetime.now() + expires_delta
-        else:
-            expire = datetime.now() + timedelta(days=2)
+	@staticmethod
+	def create_token(
+		data: dict,
+		token_type: Optional[TokenType] = TokenType.ACCESS_TOKEN.value,
+		expires_delta: Optional[timedelta] = None,
+	) -> str:
+		to_encode = data.copy()
 
-        to_encode.update({"exp": expire})
-        encoded_jwt = jwt.encode(
-            to_encode, config.SECRET_KEY, algorithm=config.ALGORITHM)
-        return encoded_jwt
+		if token_type == TokenType.ACCESS_TOKEN.value:
+			expire = datetime.now(timezone.utc) + timedelta(minutes=30)
+			to_encode['token_type'] = TokenType.ACCESS_TOKEN.value
+		elif token_type == TokenType.REFRESH_TOKEN.value:
+			expire = datetime.now(timezone.utc) + timedelta(days=2)
+			to_encode['token_type'] = TokenType.REFRESH_TOKEN.value
+		else:
+			to_encode['token_type'] = TokenType.ACCESS_TOKEN.value
+			expire = datetime.now(timezone.utc) + expires_delta
 
-    @staticmethod
-    def validate_token(token: str) -> TokenData:
-        try:
-            payload = jwt.decode(token, config.SECRET_KEY, algorithms=[config.ALGORITHM], options={"verify_sub": False})
-            user_id = payload.get("sub")
+		to_encode.update({'exp': expire})
+		encoded_jwt = jwt.encode(
+			to_encode, config.SECRET_KEY, algorithm=config.ALGORITHM
+		)
+		return encoded_jwt
 
-            if user_id is None:
-                raise status.HTTP_404_NOT_FOUND
-            token_data = TokenData(user_id=user_id)
-            return token_data
+	@staticmethod
+	def validate_token(token: str) -> TokenData:
+		try:
+			payload = jwt.decode(
+				token,
+				config.SECRET_KEY,
+				algorithms=[config.ALGORITHM],
+				# options={'verify_sub': False},
+			)
+			# Check: Token, schemas, usecase:login, auth_dependency
+			token_type = payload.get('token_type')
+			user_id = payload.get('id')
+			username = payload.get('username')
+			email = payload.get('email')
+			full_name = payload.get('full_name')
+			role = payload.get('role')
 
-        except ExpiredSignatureError:
-            raise status.HTTP_404_NOT_FOUND
-        except JWTError as err:
-            print(err)
-            raise status.HTTP_404_NOT_FOUND
+			if user_id is None:
+				raise status.HTTP_404_NOT_FOUND
+			token_data = TokenData(
+				token_type=token_type,
+				id=user_id,
+				username=username,
+				email=email,
+				full_name=full_name,
+				role=role,
+			)
+			return token_data
 
+		except ExpiredSignatureError:
+			return False
+		except JWTError as err:
+			print(err)
+			raise status.HTTP_404_NOT_FOUND
