@@ -1,20 +1,14 @@
 [
     {
-        "role": "admin",
-        "permissions": [
-            "dashboard:users:search",
-            "dashboard:users-status:update",
-            "dashboard:users-password:update"
-        ]
+        "role": "admin"
     },
     {
-        "role": "manager",
-        "permissions": [
-            "dashboard:users:search"
-        ]
+        "role": "manager"
     },
     {
-        "role": "user",
-        "permissions": []
+        "role": "developer"
+    },
+    {
+        "role": "user"
     }
 ]

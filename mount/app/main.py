@@ -15,9 +15,17 @@ from app.services.exceptions import (
 )
 from app.services.lifespan import lifespan
 from app.utils.logger import LogAPIMiddleware, Logger
+from app.services.config import config
+
+
 
 # Check lifespan for startup and shutdown DB connection
-app = FastAPI(title='FastAPI Bootstrap', lifespan=lifespan)
+app = FastAPI(
+	title='FastAPI Bootstrap', 
+	lifespan=lifespan, 
+	docs_url='/docs' if config.ENVIRONMENT == 'dev' else None, 
+	redoc_url=None
+	)
 
 
 # init logger

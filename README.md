@@ -23,7 +23,7 @@ DB_USER=fastuser
 DB_PASSWORD=fastpassword!
 DB_HOST=pgdb
 DB_NAME=fastdb
-SECRET_KEY=s7dy3qua3jxkspo&=#0xd53t-3a7g0mnj_s5(2g=eh#)jd^!3y
+SECRET_KEY=p7dy3qua3jxkspo&=#0xd56t-3a7g0mnj_s5(2g=eh#)jd^!6y
 ALGORITHM=HS256
 ```
 
@@ -51,18 +51,17 @@ I have written a Makefile to simplify the process. You can use the commands in t
 3. **shell**: `make shell`
 
 
-> Note: These commands build and run your project in Docker. If you find that your database tables are not created, use make restart. (This may happen the first time you run the project.)
-
-
-
 ## Migration
 
 When you create a new model, you should import it in `models/__init__.py`. After that, you can run the `make migrate` command. If you make any changes to a model or create a new one, those changes will be reflected in the database after restarting the application. This is because `script/start.sh` runs `alembic upgrade head` before starting the application.
 
 
-## Seeds
+## Seeds --
 
 We seed roles when the application starts. The `roles_seeder.py` script in the seed directory handles this, fetching the data from `data/roles.json`. If you create any seeder script, remember to import it in `run.py`.
+
+
+> Note: These commands build and run your project in Docker. If you find that your database tables are not created, use make restart. (This may happen the first time you run the project.)
 
 
 ## Logs
