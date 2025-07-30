@@ -23,9 +23,9 @@ async def get_profile(
 		return standard_response(
 			user_status_code, user_success, user_message, user_data
 		)
-	user_id = json.loads(user_data)['id']
+
 	status_code, success, message, data = await profiles_usecases.get_profile(
-		user_id, db
+		user_data['data']['id'], db
 	)
 	return standard_response(status_code, success, message, data)
 
@@ -41,8 +41,8 @@ async def update(
 		return standard_response(
 			user_status_code, user_success, user_message, user_data
 		)
-	user_id = json.loads(user_data)['id']
+
 	status_code, success, message, data = await profiles_usecases.update(
-		user_id, profile_in, db
+		user_data['data']['id'], profile_in, db
 	)
 	return standard_response(status_code, success, message, data)

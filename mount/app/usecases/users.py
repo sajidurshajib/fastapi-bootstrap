@@ -12,7 +12,9 @@ from app.schemas.roles import RoleResponse
 from app.schemas.users import (
 	LoginRequest,
 	UserRequest,
+	UserUpdate,
 	UserResponse,
+	UserOnlyResponse,
 	UserWithRoleId,
 )
 from app.utils.logger import Logger
@@ -33,7 +35,7 @@ async def auth(user_id: int, db: AsyncSession):
 			logger.info('User not found!')
 			return status.HTTP_404_NOT_FOUND, False, 'User not found!', None
 
-		new_data_resp = UserResponse(
+		new_data_resp = UserOnlyResponse(
 			id=user_data.id,
 			username=user_data.username,
 			email=user_data.email,
@@ -218,7 +220,7 @@ async def signup(user_data: UserRequest, db: AsyncSession):
 		)
 
 
-async def update(user_id: int, user_data: UserRequest, db: AsyncSession):
+async def update(user_id: int, user_data: UserUpdate, db: AsyncSession):
 	user_repo = UserRepository(db)
 
 	try:

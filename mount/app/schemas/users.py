@@ -24,6 +24,17 @@ class UserUpdate(BaseModel):
 	class Config:
 		form_attribute = True
 
+class UserOnlyResponse(BaseModel):
+	id: int
+	username: str
+	email: str
+	full_name: Optional[str] = None
+	is_active: bool
+	role: Optional[RoleResponse] = None
+
+	class Config:
+		form_attribute = True
+
 
 class UserResponse(BaseModel):
 	id: int

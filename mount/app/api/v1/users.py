@@ -51,9 +51,9 @@ async def update(
 		return standard_response(
 			user_status_code, user_success, user_message, user_data
 		)
-	user_id = json.loads(user_data)['id']
+
 	status_code, success, message, data = await users_usecases.update(
-		user_id, user_in, db
+		user_data['data']['id'], user_in, db
 	)
 	return standard_response(status_code, success, message, data)
 
@@ -69,8 +69,8 @@ async def update_password(
 		return standard_response(
 			user_status_code, user_success, user_message, user_data
 		)
-	user_id = json.loads(user_data)['id']
+
 	status_code, success, message, data = await users_usecases.update_password(
-		pass_in.new_password, user_id, db, True, pass_in.old_password
+		pass_in.new_password, user_data['data']['id'], db, True, pass_in.old_password
 	)
 	return standard_response(status_code, success, message, data)
