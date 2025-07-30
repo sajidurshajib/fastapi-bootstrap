@@ -1,13 +1,14 @@
 import json
 
+from fastapi import Depends, status
+from fastapi.security import HTTPBasicCredentials, HTTPBearer
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.enums.tokens import TokenType
 from app.services.connection import get_db
 from app.usecases import users as users_usecases
 from app.utils.logger import Logger
 from app.utils.token import Token
-from fastapi import Depends, status
-from fastapi.security import HTTPBasicCredentials, HTTPBearer
-from sqlalchemy.ext.asyncio import AsyncSession
 
 security = HTTPBearer()
 

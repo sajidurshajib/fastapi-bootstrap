@@ -4,11 +4,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.enums.roles import RoleEnum
 from app.schemas import StandardResponse
 from app.schemas.users import NewPasswordRequest
+from app.services.auth_dependency import rbac_required
 from app.services.connection import get_db
 from app.usecases import users as users_usecases
 from app.usecases import users_dashboard as users_dashboard_usecases
 from app.utils.responses import standard_response
-from app.services.auth_dependency import rbac_required
 
 router = APIRouter(prefix='/users')
 
@@ -43,7 +43,9 @@ async def search_users(
 @router.patch('/status/{user_id}')
 async def user_status_change(
 	user_id: int,
-	user: StandardResponse = Depends(rbac_required([RoleEnum.ADMIN.value, RoleEnum.USER.value])),
+	user: StandardResponse = Depends(
+		rbac_required([RoleEnum.ADMIN.value, RoleEnum.USER.value])
+	),
 	db: AsyncSession = Depends(get_db),
 ):
 	user_status_code, user_success, user_message, user_data = user
@@ -65,7 +67,9 @@ async def user_status_change(
 async def user_password_change(
 	user_id: int,
 	new_password: NewPasswordRequest,
-	user: StandardResponse = Depends(rbac_required([RoleEnum.ADMIN.value, RoleEnum.USER.value])),
+	user: StandardResponse = Depends(
+		rbac_required([RoleEnum.ADMIN.value, RoleEnum.USER.value])
+	),
 	db: AsyncSession = Depends(get_db),
 ):
 	user_status_code, user_success, user_message, user_data = user

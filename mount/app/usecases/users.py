@@ -11,10 +11,10 @@ from app.schemas.profiles import ProfileResponse
 from app.schemas.roles import RoleResponse
 from app.schemas.users import (
 	LoginRequest,
-	UserRequest,
-	UserUpdate,
-	UserResponse,
 	UserOnlyResponse,
+	UserRequest,
+	UserResponse,
+	UserUpdate,
 	UserWithRoleId,
 )
 from app.utils.logger import Logger
@@ -22,7 +22,6 @@ from app.utils.password_utils import PasswordHasher
 from app.utils.token import Token
 
 logger = Logger(__name__)
-
 
 
 async def auth(user_id: int, db: AsyncSession):
@@ -104,7 +103,7 @@ async def login(user_credentials: LoginRequest, db: AsyncSession):
 			},
 			token_type=TokenType.ACCESS_TOKEN.value,
 		)
-		
+
 		refresh_token = Token.create_token(
 			{'id': user_exists.id}, token_type=TokenType.REFRESH_TOKEN.value
 		)
@@ -184,7 +183,7 @@ async def signup(user_data: UserRequest, db: AsyncSession):
 
 		new_user: User = await user_repo.create(data=user_db_in.model_dump())
 
-		new_data_resp = UserResponse(
+		new_data_resp = UserOnlyResponse(
 			id=new_user.id,
 			username=new_user.username,
 			email=new_user.email,
@@ -192,11 +191,6 @@ async def signup(user_data: UserRequest, db: AsyncSession):
 			is_active=new_user.is_active,
 			role=RoleResponse.model_validate(new_user.role.__dict__.copy())
 			if new_user.role
-			else None,
-			profile=ProfileResponse.model_validate(
-				new_user.profile.__dict__.copy()
-			)
-			if new_user.profile
 			else None,
 		)
 

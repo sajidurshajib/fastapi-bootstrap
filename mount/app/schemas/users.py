@@ -24,6 +24,7 @@ class UserUpdate(BaseModel):
 	class Config:
 		form_attribute = True
 
+
 class UserOnlyResponse(BaseModel):
 	id: int
 	username: str

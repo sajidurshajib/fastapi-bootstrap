@@ -1,5 +1,3 @@
-import json
-
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -71,6 +69,10 @@ async def update_password(
 		)
 
 	status_code, success, message, data = await users_usecases.update_password(
-		pass_in.new_password, user_data['data']['id'], db, True, pass_in.old_password
+		pass_in.new_password,
+		user_data['data']['id'],
+		db,
+		True,
+		pass_in.old_password,
 	)
 	return standard_response(status_code, success, message, data)
