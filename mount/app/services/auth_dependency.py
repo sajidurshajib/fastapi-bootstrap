@@ -89,7 +89,6 @@ async def refresh_token(
 				'username': data_json['username'],
 				'email': data_json['email'],
 				'full_name': data_json['full_name'],
-				'photo': data_json['photo'],
 				'role': data_json['role']['role'],
 			},
 			token_type=TokenType.ACCESS_TOKEN.value,

@@ -8,7 +8,7 @@ from app.schemas.users import (
 	UserRequest,
 	UserUpdate,
 )
-from app.services.auth_dependency import logged_in
+from app.services.auth_dependency import logged_in, validate_token, refresh_token
 from app.services.connection import get_db
 from app.usecases import users as users_usecases
 from app.utils.responses import standard_response
@@ -18,6 +18,18 @@ router = APIRouter(prefix='/users')
 
 @router.get('/auth')
 async def auth(user: StandardResponse = Depends(logged_in)):
+	status, success, message, data = user
+	return standard_response(status, success, message, data)
+
+
+@router.get('/validate', response_model=StandardResponse)
+async def validate(user: StandardResponse = Depends(validate_token)):
+	status, success, message, data = user
+	return standard_response(status, success, message, data)
+
+
+@router.get('/refresh', response_model=StandardResponse)
+async def refresh(user: StandardResponse = Depends(refresh_token)):
 	status, success, message, data = user
 	return standard_response(status, success, message, data)
 
