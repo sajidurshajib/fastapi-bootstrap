@@ -13,6 +13,9 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=${DB_HOST}
       - DB_NAME=${DB_NAME}
+      - MONGODB_USER=${MONGODB_USER}
+      - MONGODB_PASS=${MONGODB_PASS}
+      - MONGODB_DATABASE=${MONGODB_DATABASE}
       - SECRET_KEY=${SECRET_KEY}
       - ALGORITHM=${ALGORITHM}
     volumes:
@@ -33,7 +36,20 @@ services:
       - "5432:5432"
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
+  
+  mongodb:
+    image: mongo:6
+    container_name: fast_mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASS}
+      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE}
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo_data:/data/db
 
 volumes:
   postgres_data:
+  mongo_data:
 

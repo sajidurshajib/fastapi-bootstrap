@@ -8,24 +8,15 @@ from sqlalchemy.sql import text
 from app.services.config import config
 from app.services.connection import sessionmanager
 
+from beanie import init_beanie
+from motor.motor_asyncio import AsyncIOMotorClient
+from app.schemas.beanie_models import beanie_models
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-	"""
-	Manages the startup and shutdown lifecycle of the FastAPI application.
-
-	Startup:
-	- Initializes the database connection using the provided configuration.
-	- Verifies that the database connection is healthy by executing a simple query.
-	- If connection lost then retry and log.
-
-	Shutdown:
-	- Closes the database connection to ensure proper resource cleanup.
-
-	This function is invoked automatically by FastAPI when the application starts
-	and stops. If the database connection cannot be established during startup,
-	the application will fail to start.
-	"""
+	#======================
+	# PostgreSQL Connection
+	#======================
 
 	max_retries = 5
 	retry_delay = 5  # seconds
@@ -53,6 +44,24 @@ async def lifespan(app: FastAPI):
 				raise RuntimeError(
 					'Database connection failed during startup. Exiting.'
 				) from e
+	
+	# ==================
+	# MongoDB Connection
+	# ==================
+	global mongo_client 
+	mongo_client = AsyncIOMotorClient(config.mongo_dsn)
+
+	try:
+		await init_beanie(
+			database=mongo_client[config.MONGODB_DATABASE],
+			document_models=beanie_models,
+			allow_index_dropping=True,
+			recreate_views=True,
+		)
+		print('[+] MongoDB connection successfully established during startup.')
+	except Exception as e:
+		print(f'[-] MongoDB init failed: {e}')
+		raise
 
 	# separate startup and shutdown
 	yield

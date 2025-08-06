@@ -1,0 +1,1 @@
+beanie_models = []

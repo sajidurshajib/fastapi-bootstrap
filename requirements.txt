@@ -14,14 +14,19 @@ asyncpg==0.30.0
     # via -r requirements.in
 bcrypt==4.3.0
     # via -r requirements.in
+beanie==2.0.0
+    # via -r requirements.in
 certifi==2025.6.15
     # via requests
 charset-normalizer==3.4.2
     # via requests
 click==8.2.1
     # via
+    #   beanie
     #   typer
     #   uvicorn
+dnspython==2.7.0
+    # via pymongo
 ecdsa==0.19.1
     # via python-jose
 fastapi==0.115.14
@@ -34,6 +39,8 @@ idna==3.10
     # via
     #   anyio
     #   requests
+lazy-model==0.3.0
+    # via beanie
 mako==1.3.10
     # via alembic
 markdown-it-py==3.0.0
@@ -42,13 +49,17 @@ markupsafe==3.0.2
     # via mako
 mdurl==0.1.2
     # via markdown-it-py
+motor==3.7.1
+    # via -r requirements.in
 pyasn1==0.6.1
     # via
     #   python-jose
     #   rsa
 pydantic==2.11.7
     # via
+    #   beanie
     #   fastapi
+    #   lazy-model
     #   pydantic-settings
 pydantic-core==2.33.2
     # via pydantic
@@ -56,6 +67,10 @@ pydantic-settings==2.10.1
     # via -r requirements.in
 pygments==2.19.2
     # via rich
+pymongo==4.14.0
+    # via
+    #   beanie
+    #   motor
 python-dotenv==1.1.1
     # via
     #   -r requirements.in
@@ -86,6 +101,7 @@ typing-extensions==4.14.1
     # via
     #   alembic
     #   anyio
+    #   beanie
     #   fastapi
     #   pydantic
     #   pydantic-core
