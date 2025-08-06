@@ -12,3 +12,4 @@ bcrypt
 typer
 beanie 
 motor
+wsproto

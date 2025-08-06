@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.sql import text
 
+from app.api.ws import router as ws_router
 from app.api.dashboard import router as dashboard_router
 from app.api.v1 import router as v1_router
 from app.services.connection import sessionmanager
@@ -76,3 +77,4 @@ async def health_check():
 # All routes
 app.include_router(v1_router, prefix='/api/v1')
 app.include_router(dashboard_router, prefix='/api/dashboard')
+app.include_router(ws_router, prefix='/ws') # ws://localhost:8000/ws/
