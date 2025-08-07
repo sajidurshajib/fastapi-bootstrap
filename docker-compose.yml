@@ -16,6 +16,10 @@ services:
       - MONGODB_USER=${MONGODB_USER}
       - MONGODB_PASS=${MONGODB_PASS}
       - MONGODB_DATABASE=${MONGODB_DATABASE}
+      - MONGODB_HOST=${MONGODB_HOST}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
       - SECRET_KEY=${SECRET_KEY}
       - ALGORITHM=${ALGORITHM}
     volumes:
@@ -49,7 +53,20 @@ services:
     volumes:
       - ./mongo_data:/data/db
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: fast_rabbitmq
+    ports:
+      - "5672:5672"      # RabbitMQ main port
+      - "15672:15672"    # RabbitMQ management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
 volumes:
   postgres_data:
   mongo_data:
+  rabbitmq_data:
 
