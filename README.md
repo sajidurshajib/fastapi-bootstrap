@@ -64,6 +64,11 @@ We seed roles when the application starts. The `roles_seeder.py` script in the s
 > Note: These commands build and run your project in Docker. If you find that your database tables are not created, use make restart. (This may happen the first time you run the project.)
 
 
+## WeebSocket
+```
+wscat -c "ws://localhost:8000/ws/notifications/" -H "Authorization: Bearer YOUR_TOKEN"
+```
+
 ## Logs
 You will find error logs only in `logs` directory.
 
