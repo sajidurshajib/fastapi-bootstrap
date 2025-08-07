@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.enums.roles import RoleEnum
 from app.enums.tokens import TokenType
 from app.models import User
+from app.notifications.users import notify_user_login
 from app.repositories.profile_repo import ProfileRepository
 from app.repositories.role_repo import RoleRepository
 from app.repositories.user_repo import UserRepository
@@ -20,6 +21,7 @@ from app.schemas.users import (
 from app.utils.logger import Logger
 from app.utils.password_utils import PasswordHasher
 from app.utils.token import Token
+import asyncio
 
 logger = Logger(__name__)
 
@@ -106,6 +108,11 @@ async def login(user_credentials: LoginRequest, db: AsyncSession):
 
 		refresh_token = Token.create_token(
 			{'id': user_exists.id}, token_type=TokenType.REFRESH_TOKEN.value
+		)
+
+		# Push notification in background (non-blocking)
+		asyncio.create_task(
+			notify_user_login(user_exists.id, user_exists.username,"You loggged in successfully!")
 		)
 
 		return (
