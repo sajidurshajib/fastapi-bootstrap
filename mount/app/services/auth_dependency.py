@@ -15,6 +15,13 @@ security = HTTPBearer()
 logger = Logger(__name__)
 
 
+class TokenWrapper:
+    # This wrapper mimics FastAPI's HTTPAuthorizationCredentials,
+    # allowing the logged_in function to access the token via .credentials
+    def __init__(self, credentials):
+        self.credentials = credentials
+		
+
 async def validate_token(
 	credentials: HTTPBasicCredentials = Depends(security),
 ):
