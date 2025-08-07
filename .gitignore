@@ -6,6 +6,7 @@ redis_data
 env
 venv
 /mount/logs
+.ruff_cache
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
